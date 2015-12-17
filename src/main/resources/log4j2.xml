@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration
+        xmlns="http://logging.apache.org/log4j/2.0/config"
+        status="debug"
+        strict="true"
+        monitorInterval="120"
+        shutdownHook="disable">
+
+    <Properties>
+        <Property name="LOG_PATTERN">
+            <![CDATA[%highlight{%d{dd.MM.yy HH:mm:ss.SSS} [%-5p] | [%-15.15t] [%-36.36X{reqUuid}] [%-25.25c{1}] %m}{FATAL=BLINK BRIGHT RED, ERROR=BRIGHT RED, WARN=RED, INFO=DEFAULT, DEBUG=GREEN, TRACE=CYAN}%n]]>
+        </Property>
+    </Properties>
+
+    <Loggers>
+        <Logger
+                name="fh.wed.uni.mp.gs"
+                level="debug"/>
+    </Loggers>
+</Configuration>
