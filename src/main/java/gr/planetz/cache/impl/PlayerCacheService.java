@@ -26,6 +26,7 @@ public class PlayerCacheService implements CacheService {
     private final long                     period;
 
     public PlayerCacheService(final long expirationTimeInMillis, final long cleanUpPeriod) {
+        LOG.debug("PlayerCacheService initialized");
         Validate.isTrue(expirationTimeInMillis > 0, "|expirationTimeInMillis| must be greater than null!");
         Validate.isTrue(cleanUpPeriod > 0, "|cleanUpPeriod| must be greater than null!");
         this.period = cleanUpPeriod;
@@ -53,6 +54,7 @@ public class PlayerCacheService implements CacheService {
 
     @Override
     public void putPlayer(final String nickname, final String ip) {
+        LOG.info("PUT: nickname[" + nickname + "] ip[" + ip + "]");
         this.cache.put(nickname, ip);
     }
 

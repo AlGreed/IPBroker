@@ -29,6 +29,7 @@
         <dep.junit.version>4.12</dep.junit.version>
         <dep.sl4j.version>1.7.13</dep.sl4j.version>
         <dep.logback.version>1.1.1</dep.logback.version>
+        <dep.httpclient.version>4.5.1</dep.httpclient.version>
 
         <dep.bc.version>1.53</dep.bc.version>
         <dep.sra.version>sra_1.0.2</dep.sra.version>
@@ -252,6 +253,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${dep.httpclient.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
