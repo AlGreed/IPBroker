@@ -19,7 +19,7 @@ import gr.planetz.cache.CacheService;
 import gr.planetz.model.JoinToRoomRequest;
 import gr.planetz.model.JoinToRoomResponse;
 
-@RestController(Schema.V1_0.PATH)
+@RestController
 public class GameServerController {
 
     private static final Logger LOG = Logger.getLogger(GameServerController.class);
@@ -28,7 +28,7 @@ public class GameServerController {
     private CacheService        cacheService;
 
     @ResponseBody
-    @RequestMapping(method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = Schema.V1_0.JOIN_PATH, method = POST, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<JoinToRoomResponse> handleJoinToRoomRequest(@Valid @RequestBody final JoinToRoomRequest jsonRequest, final HttpServletRequest request) {
         LOG.info("RCVD: a join request: " + jsonRequest);
         this.cacheService.putPlayer(jsonRequest.getNickname(), request.getRemoteAddr());

@@ -64,7 +64,7 @@ public class ControllerIT {
         final String toSendRequest = this.requestBuilder.put("nickname", "AlGreed").toString();
 
         // perform
-        final MvcResult result = this.mockMvc.perform(post(Schema.V1_0.PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest))
+        final MvcResult result = this.mockMvc.perform(post(Schema.V1_0.JOIN_PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest))
                 .andExpect(status().isAccepted()).andReturn();
 
         final String expectedResponse = "{\"Players\":{\"AlGreed\":\"127.0.0.1\"}}";
@@ -78,17 +78,18 @@ public class ControllerIT {
         this.cacheService.putPlayer("DukeNukem", "123.34.52.12");
 
         // perform
-        MvcResult result = this.mockMvc.perform(post(Schema.V1_0.PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest))
+        MvcResult result = this.mockMvc.perform(post(Schema.V1_0.JOIN_PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest))
                 .andExpect(status().isAccepted()).andReturn();
 
         final String expectedResponse1 = "{\"Players\":{\"AlGreed\":\"127.0.0.1\",\"DukeNukem\":\"123.34.52.12\"}}";
         assertEquals("The wrong response!", expectedResponse1, result.getResponse().getContentAsString());
 
         Thread.sleep(this.cleanUpPeriod);
-        this.mockMvc.perform(post(Schema.V1_0.PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest)).andExpect(status().isAccepted()).andReturn();
+        this.mockMvc.perform(post(Schema.V1_0.JOIN_PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest)).andExpect(status().isAccepted())
+                .andReturn();
 
         Thread.sleep(this.cleanUpPeriod);
-        result = this.mockMvc.perform(post(Schema.V1_0.PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest)).andExpect(status().isAccepted())
+        result = this.mockMvc.perform(post(Schema.V1_0.JOIN_PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest)).andExpect(status().isAccepted())
                 .andReturn();
 
         final String expectedResponse2 = "{\"Players\":{\"AlGreed\":\"127.0.0.1\"}}";
