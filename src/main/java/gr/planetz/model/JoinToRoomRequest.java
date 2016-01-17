@@ -4,34 +4,49 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class JoinToRoomRequest {
 
-    @JsonProperty("nickname")
+    @JsonProperty(value = "nickname", required = true)
     private final String nickname;
 
-    public JoinToRoomRequest(@JsonProperty("nickname") final String nickname) {
+    @JsonProperty(value = "address", required = true)
+    private final String address;
+
+    public JoinToRoomRequest(@JsonProperty("nickname") final String nickname, @JsonProperty("address") final String address) {
         this.nickname = nickname;
+        this.address = address;
     }
 
     public String getNickname() {
         return this.nickname;
     }
 
-    @Override
-    public int hashCode() {
-        return this.nickname != null ? this.nickname.hashCode() : 0;
+    public String getAddress() {
+        return address;
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
+    public boolean equals(Object o) {
+        if (this == o)
             return true;
-        }
-        if (!(o instanceof JoinToRoomRequest)) {
+        if (o == null || getClass() != o.getClass())
             return false;
-        }
 
-        final JoinToRoomRequest that = (JoinToRoomRequest) o;
+        JoinToRoomRequest that = (JoinToRoomRequest) o;
 
-        return this.nickname != null ? this.nickname.equals(that.nickname) : that.nickname == null;
+        if (nickname != null ? !nickname.equals(that.nickname) : that.nickname != null)
+            return false;
+        return address != null ? address.equals(that.address) : that.address == null;
 
+    }
+
+    @Override
+    public int hashCode() {
+        int result = nickname != null ? nickname.hashCode() : 0;
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "JoinToRoomRequest{" + "nickname='" + nickname + '\'' + ", address='" + address + '\'' + '}';
     }
 }

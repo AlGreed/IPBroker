@@ -10,5 +10,7 @@ public class Schema {
         public static final String GAME_PATH = CONTEXT + '/' + VERSION + "/messages";
 
         public static final String JOIN_PATH = CONTEXT + '/' + VERSION + "/join";
+
+        public static final String PLAYERS_PATH = CONTEXT + '/' + VERSION + "/players";
     }
 }

@@ -38,15 +38,12 @@ public class PlayerCacheService implements CacheService {
         LOG.debug("Cache cleanup service is started.");
         if (!isRunning()) {
             this.isRunning.set(true);
-            this.executor.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        LOG.debug("Cleaning up cache...");
-                        cache.cleanUp();
-                    } catch (final Exception e) {
-                        LOG.error("Cleaning up process cannot clean up cache!");
-                    }
+            this.executor.scheduleAtFixedRate((Runnable) () -> {
+                try {
+                    LOG.debug("Cleaning up cache...");
+                    cache.cleanUp();
+                } catch (final Exception e) {
+                    LOG.error("Cleaning up process cannot clean up cache!");
                 }
             }, 0, this.period, TimeUnit.MILLISECONDS);
         }
@@ -61,6 +58,12 @@ public class PlayerCacheService implements CacheService {
     @Override
     public Map<String, String> getPlayers() {
         return this.cache.asMap();
+    }
+
+    @Override
+    public boolean containsPlayers(String nickname, String ip) {
+        final String containedIp = getPlayers().get(nickname);
+        return containedIp != null && containedIp.equals(ip);
     }
 
     @Override

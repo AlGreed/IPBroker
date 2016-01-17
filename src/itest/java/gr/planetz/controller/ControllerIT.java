@@ -1,11 +1,14 @@
 package gr.planetz.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.tomakehurst.wiremock.junit.WireMockClassRule;
 
 import gr.planetz.Schema;
 import gr.planetz.cache.CacheService;
@@ -33,23 +37,29 @@ import gr.planetz.cache.CacheService;
 @DirtiesContext
 public class ControllerIT {
 
-    private final ObjectNode      requestBuilder  = JsonNodeFactory.instance.objectNode();
+    @ClassRule
+    public static final WireMockClassRule WIRE_MOCK_RULE       = new WireMockClassRule(12666);
 
-    private final ObjectNode      responseBuilder = JsonNodeFactory.instance.objectNode();
+    @Rule
+    public final WireMockClassRule        wireMockInstanceRule = WIRE_MOCK_RULE;
+
+    private final ObjectNode              requestBuilder       = JsonNodeFactory.instance.objectNode();
+
+    private final ObjectNode              responseBuilder      = JsonNodeFactory.instance.objectNode();
 
     @Autowired
-    private WebApplicationContext webApplicationContext;
+    private WebApplicationContext         webApplicationContext;
 
     @Autowired
-    private CacheService          cacheService;
+    private CacheService                  cacheService;
 
     @Value("${player.cache.expiration.time.in.seconds}")
-    private long                  durationInSeconds;
+    private long                          durationInSeconds;
 
     @Value("${player.cache.cleanup.period.in.millis}")
-    private long                  cleanUpPeriod;
+    private long                          cleanUpPeriod;
 
-    private MockMvc               mockMvc;
+    private MockMvc                       mockMvc;
 
     @Before
     public void before() {
@@ -61,20 +71,36 @@ public class ControllerIT {
     @Test
     public void assertThatWellFormedRequestWillBeHandledCorrectly() throws Exception {
         // prepare
-        final String toSendRequest = this.requestBuilder.put("nickname", "AlGreed").toString();
+        final String toSendRequest = this.requestBuilder.put("nickname", "AlGreed").put("address", "https://127.0.0.1:8443/messages").toString();
 
         // perform
         final MvcResult result = this.mockMvc.perform(post(Schema.V1_0.JOIN_PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest))
                 .andExpect(status().isAccepted()).andReturn();
 
-        final String expectedResponse = "{\"Players\":{\"AlGreed\":\"127.0.0.1\"}}";
+        final String expectedResponse = "{\"Players\":{\"AlGreed\":\"https://127.0.0.1:8443/messages\"}}";
         assertEquals("The wrong response!", expectedResponse, result.getResponse().getContentAsString());
+    }
+
+    @Test
+    public void assertThatWellFormedGetPlayersRequestWillBeHandledCorrectly() throws Exception {
+        // prepare
+        final String toSendRequest = this.requestBuilder.put("nickname", "AlGreed").put("address", "https://127.0.0.1:8443/messages").toString();
+
+        // perform
+        final MvcResult result = this.mockMvc.perform(post(Schema.V1_0.JOIN_PATH).accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(toSendRequest))
+                .andExpect(status().isAccepted()).andReturn();
+
+        final String expectedResponse = "{\"Players\":{\"AlGreed\":\"https://127.0.0.1:8443/messages\"}}";
+        assertEquals("The wrong response!", expectedResponse, result.getResponse().getContentAsString());
+
+        final MvcResult getPlayersResult = this.mockMvc.perform(get(Schema.V1_0.PLAYERS_PATH)).andExpect(status().isAccepted()).andReturn();
+        assertEquals("The wrong response!", expectedResponse, getPlayersResult.getResponse().getContentAsString());
     }
 
     @Test
     public void assertThatNewResponseAddsNewPlayerToOneExisted() throws Exception {
         // prepare
-        final String toSendRequest = this.requestBuilder.put("nickname", "AlGreed").toString();
+        final String toSendRequest = this.requestBuilder.put("nickname", "AlGreed").put("address", "127.0.0.1").toString();
         this.cacheService.putPlayer("DukeNukem", "123.34.52.12");
 
         // perform
@@ -95,5 +121,4 @@ public class ControllerIT {
         final String expectedResponse2 = "{\"Players\":{\"AlGreed\":\"127.0.0.1\"}}";
         assertEquals("The wrong response!", expectedResponse2, result.getResponse().getContentAsString());
     }
-
 }

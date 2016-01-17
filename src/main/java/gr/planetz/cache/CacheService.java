@@ -8,6 +8,8 @@ public interface CacheService extends AutoCloseable {
 
     Map<String, String> getPlayers();
 
+    boolean containsPlayers(String nickname, String ip);
+
     boolean isRunning();
 
     long getSize();
