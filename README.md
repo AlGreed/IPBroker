@@ -68,4 +68,4 @@ server.ssl.keyAlias=localhost
 - To start the service from jar, execute the following command:
     "java -cp ipbroker.jar gr.planetz.Application"
 
-[Release build boots server up on localhost]
+[Release build boots up service on localhost]
