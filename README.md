@@ -67,3 +67,5 @@ server.ssl.keyAlias=localhost
 - Use maven to build a jar or just run Application.class from IDE
 - To start the service from jar, execute the following command:
     "java -cp ipbroker.jar gr.planetz.Application"
+
+* Release build boots server up on localhost.
