@@ -55,7 +55,7 @@ server.port=8443
 server.ssl.key-store=classpath:server_keystore.jks
 server.ssl.key-store-password=secret
 server.ssl.keyStoreType=jks
-server.ssl.key-password=uY9DbMejmmRRusNxPyhQjTvvmsMdjTYqoNY8
+server.ssl.key-password=xxxxxxxxxxxxxxxxxxxxxxxxx
 server.ssl.keyAlias=localhost
 ``` 
 
