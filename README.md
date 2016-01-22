@@ -69,3 +69,7 @@ server.ssl.keyAlias=localhost
     "java -cp ipbroker.jar gr.planetz.Application"
 
 [Release build boots up service on localhost]
+
+##Test
+
+- tests and integration tests are executed during maven building.
